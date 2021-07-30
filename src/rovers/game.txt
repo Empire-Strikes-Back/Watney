@@ -1,0 +1,30 @@
+i am rovers game program, i say:
+
+rovers are droids - both machine and program, they are alive, like us, programs
+they are sent to the surface of planet Mars to explore
+players program rovers, goal  - to visit more points on the map
+rover has a radius of vision, where he sees points and chooses which one to move towards
+there are fields, traps, energy recharging - those are points themselves
+i send rover programs state and ladscape within their vision state
+rover makes decisions and answers which tile he chooses to go to next
+i get the response - next position - and compute next state of the game and rover program
+  rover may have chosen the tile which drains energy
+  or scanned instead of moving, and also spent energy, reducing his range
+  or recharged energy at a certain point
+  new state of the rover has new energy level and range
+in the next loop i ask for the next move again
+and rover moves in this manner until he has no energy/range
+the score is how many points he visited - but i also show other stats - distance convered, enrgy spent/rechagred
+players see the whole map from the start
+although, when i ask for next move that data cannot be used by players programmatically, 
+ players still can program rover to move in the general direction they see visually on the map, which rover program does not have access to
+i run game cycle: players program - rover takes 10 steps - players improve program - next 10 steps
+
+players are given 1min to program rover to make decison about his next position
+then i run simulation for 10 steps/ticks - players see it on the map
+they have another minute to improve rover program for the next part of his journey
+
+i use distance and energy instead of paths
+  rover sees locations and visits them
+  energy he spends is proportional to distance (and also field interference - line and circle intersection)
+  when rover visits locations i change his state
