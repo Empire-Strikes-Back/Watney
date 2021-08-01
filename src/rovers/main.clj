@@ -8,9 +8,7 @@
    [clojure.string]
    [clojure.spec.alpha :as s]
    [clojure.java.io :as io]
-   [cljfx.api]
-   
-   [libraries.fs.runtime.core :as fs.runtime.core])
+   [cljfx.api])
   (:import
    (javafx.event Event EventHandler)
    (javafx.stage WindowEvent)
@@ -37,7 +35,7 @@
 
 (defn -main [& args]
   (println ::-main)
-  (let [data-dir (fs.runtime.core/path-join (System/getProperty "user.dir"))
+  (let [data-dir (-> (io/file (System/getProperty "user.dir")) (.getCanonicalPath))
         renderer (cljfx.api/create-renderer)]
     (reset! stateA {:fx/type stage
                     ::renderer renderer})
