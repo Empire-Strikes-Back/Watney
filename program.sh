@@ -17,5 +17,13 @@ main(){
     -M -m rovers.main
 }
 
+uberjar(){
+  clj \
+    -X:uberjar genie.core/process \
+    :uberjar-name out/rovers.standalone.jar \
+    :main-ns rovers.main
+  mkdir -p out/jpackage-input
+  mv out/rovers.standalone.jar out/jpackage-input/
+}
 
 "$@"
