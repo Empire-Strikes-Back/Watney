@@ -1,9 +1,7 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
         org.clojure/core.async {:mvn/version "1.3.618"}
-        org.clojure/spec.alpha {:mvn/version "0.2.187"}
-        cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx"
-                     :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}}
+        org.clojure/spec.alpha {:mvn/version "0.2.187"}}
 
  :aliases
  {:main
