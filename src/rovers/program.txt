@@ -1,3 +1,3 @@
 i am rovers program, i say:
 
-my players program rovers on Mars
+my players program rovers on surface of a planet
