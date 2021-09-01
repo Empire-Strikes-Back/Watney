@@ -14,7 +14,12 @@ main(){
 }
 
 uberjar(){
-  echo 1
+
+  clojure \
+    -X:uberjar genie.core/process \
+    :main-ns rovers.main \
+    :filename '"out/rovers.jar"' \
+    :paths '["src" "out/identicon"]'
 }
 
 release(){
