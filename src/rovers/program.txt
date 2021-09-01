@@ -1,3 +1,4 @@
 i am rovers program, i say:
 
 my players program rovers on surface of a planet
+my interface is editor on the left and surface of planet on the right
