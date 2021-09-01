@@ -3,3 +3,4 @@ i am rovers program, i say:
 my players program rovers on surface of a planet
 my interface is editor on the left and surface of planet on the right
 i land several rovers on the surface, player writes one program for all rovers
+goal is to visit as many locations as possible before rovers run out of energy
