@@ -1,0 +1,5 @@
+i am rover program, i say:
+
+my players program rover on surface of Mars
+my interface is editor on the left and surface of planet on the right
+goal is to visit as many locations as possible before rover run out of energy
