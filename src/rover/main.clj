@@ -175,8 +175,8 @@
           :rover
           (let [{:keys [^int x ^int y name]} value
                 body (Polygon. (int-array [x (+ x 20) (+ x 20) x]) (int-array [(+ y 10) (+ y 10) (+ y 50) (+ y 50)]) 4)]
-             (.setStroke graphics (BasicStroke. 2))
-             (.setColor graphics Color/ORANGE)
+             (.setStroke graphics (BasicStroke. 4))
+             (.setColor graphics Color/BLUE)
              (.draw graphics body)
             )
           
@@ -198,7 +198,7 @@
                  shape (Polygon. (int-array [(- x 5) x (+ x 5)]) (int-array [(+ y 30) (+ y 10) (+ y 30)  ]) 3)
                  ]
              (.setStroke graphics (BasicStroke. 4))
-             (.setColor graphics Color/BLUE)
+             (.setColor graphics Color/DARK_GRAY)
              (.draw graphics shape)
             )
         
