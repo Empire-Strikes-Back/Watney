@@ -174,10 +174,19 @@
           
           :rover
           (let [{:keys [^int x ^int y name]} value
-                body (Polygon. (int-array [x (+ x 20) (+ x 20) x]) (int-array [(+ y 10) (+ y 10) (+ y 50) (+ y 50)]) 4)]
-             (.setStroke graphics (BasicStroke. 4))
-             (.setColor graphics Color/BLUE)
-             (.draw graphics body)
+                body (Polygon. (int-array [x (+ x 15) (+ x 15) x]) (int-array [(+ y 10) (+ y 10) (+ y 45) (+ y 45)]) 4)
+                ]
+             (.setColor graphics Color/WHITE)
+             (.fill graphics body)
+             (.setColor graphics Color/BLACK)
+             #_(.setStroke graphics (BasicStroke. 1))
+             (.drawLine graphics (- x 6) (+ y 14) (- x 6) (+ y 17))
+             (.drawLine graphics (- x 6) (+ y 26) (- x 6) (+ y 29))
+             (.drawLine graphics (- x 6) (+ y 38) (- x 6) (+ y 41))
+
+             (.drawLine graphics (+ x 15 6) (+ y 14) (+ x 15 6) (+ y 17))
+             (.drawLine graphics (+ x 15 6) (+ y 26) (+ x 15 6) (+ y 29))
+             (.drawLine graphics (+ x 15 6) (+ y 38) (+ x 15 6) (+ y 41))
             )
           
           :martian
