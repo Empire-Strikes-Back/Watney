@@ -8,7 +8,8 @@
     [clojure.test.check.generators :as pawny.generators]
     )
   (:import
-    (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane)
+    (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane ScrollPaneConstants)
+    (javax.swing.border EmptyBorder)
     (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension)
     (java.awt.event KeyListener KeyEvent)
     (java.awt.geom Ellipse2D Ellipse2D$Double)
@@ -81,11 +82,13 @@
   )
 
   (doto editor
-    (.setPreferredSize (Dimension. 1000 1300))
+    (.setBorder (EmptyBorder. #_top 0 #_left 0 #_bottom 0 #_right 20 ))
   )
 
   (doto editor-scroll
     (.setViewportView editor)
+    (.setHorizontalScrollBarPolicy ScrollPaneConstants/HORIZONTAL_SCROLLBAR_NEVER)
+    (.setPreferredSize (Dimension. 1000 1300))
   )
   
   (doto output
@@ -94,6 +97,7 @@
 
   (doto output-scroll
     (.setViewportView output)
+    (.setHorizontalScrollBarPolicy ScrollPaneConstants/HORIZONTAL_SCROLLBAR_NEVER)
   )
 
   (doto repl
