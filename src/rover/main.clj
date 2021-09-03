@@ -62,6 +62,13 @@
   (.setText output "")
 )
 
+(defn move
+  [x y]
+  (swap! stateA update :rover merge {:x x :y y})
+  nil
+)
+
+
 (defn window
   []
   (let [jframe (JFrame. "i am rover program")
