@@ -63,7 +63,7 @@
   (.setText output "")
 )
 
-(defn move
+(defn move ^{:player? true}
   "move rover to x y coordinate"
   [x y]
   (swap! stateA update :rover merge {:x x :y y})
