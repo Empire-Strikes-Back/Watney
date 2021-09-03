@@ -6,6 +6,7 @@
     [clojure.string]
     [clojure.java.io :as io]
     [clojure.test.check.generators :as pawny.generators]
+    [clojure.repl :refer [source doc dir]]
     )
   (:import
     (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane ScrollPaneConstants)
@@ -63,6 +64,7 @@
 )
 
 (defn move
+  "move rover to x y coordinate"
   [x y]
   (swap! stateA update :rover merge {:x x :y y})
   nil
@@ -163,7 +165,7 @@
     (fn [ref wathc-key old-state new-state]
       
       (clear-canvas)
-      (.setPaint graphics (Color. 240,231,231))
+      (.setPaint graphics (Color. 240 231 231))
       (.fillRect graphics 0 0 (.getWidth canvas) (.getHeight canvas))
       
       (doseq [[k value] new-state]
@@ -240,6 +242,10 @@
                     )         
           ]
       (swap! stateA merge rover martians towers)
+
+
+      (eval* '(dir rover.main))
+      (eval* '(doc move))
     )
   )
   nil
