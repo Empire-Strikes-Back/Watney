@@ -42,6 +42,7 @@
       (.append "\n")
       (.append (str string-writer))
       (.append (pr-str result))
+      (.append "\n")
     )
 
     (go
