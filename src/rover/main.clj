@@ -7,6 +7,7 @@
     [clojure.java.io :as io]
     [clojure.test.check.generators :as pawny.generators]
     [clojure.repl :refer [source doc dir]]
+    [rover.game]
     )
   (:import
     (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane ScrollPaneConstants)
