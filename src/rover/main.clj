@@ -166,7 +166,7 @@
     (fn [ref wathc-key old-state new-state]
       
       (clear-canvas)
-      (.setPaint graphics (Color. 240 231 231))
+      (.setPaint graphics (Color. 237 211 175 200))
       (.fillRect graphics 0 0 (.getWidth canvas) (.getHeight canvas))
       
       (doseq [[k value] new-state]
