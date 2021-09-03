@@ -10,7 +10,7 @@
   (:import
     (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane ScrollPaneConstants)
     (javax.swing.border EmptyBorder)
-    (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension)
+    (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension BasicStroke)
     (java.awt.event KeyListener KeyEvent)
     (java.awt.geom Ellipse2D Ellipse2D$Double)
   )    
@@ -156,13 +156,42 @@
     (fn [ref wathc-key old-state new-state]
       
       (clear-canvas)
-      (.setPaint graphics Color/BLACK)
+      (.setPaint graphics (Color. 240,231,231))
+      (.fillRect graphics 0 0 (.getWidth canvas) (.getHeight canvas))
       
       (doseq [[k value] new-state]
 
         (condp identical? (:shape value)
           
+          :rover
+          (let [{:keys [^int x ^int y name]} value
+                body (Polygon. (int-array [x (+ x 20) (+ x 20) x]) (int-array [(+ y 10) (+ y 10) (+ y 50) (+ y 50)]) 4)]
+             (.setStroke graphics (BasicStroke. 2))
+             (.setColor graphics Color/ORANGE)
+             (.draw graphics body)
+            )
           
+          :martian
+          (let [{:keys [^int x ^int y name]} value
+                 face (Polygon. (int-array [x (+ x 30) (+ x 18) (+ x 12)]) (int-array [(+ y 10) (+ y 10) (+ y 40) (+ y 40)]) 4)
+                 left-eye (Ellipse2D$Double. (+ x 5) (+ y 15) 8 4)
+                 right-eye (Ellipse2D$Double. (+ x 17) (+ y 15) 8 4)
+                 ]
+             (.setPaint graphics (Color. 3 165 106))
+             (.fill graphics face)
+             (.setPaint graphics Color/WHITE)
+             (.fill graphics left-eye)
+             (.fill graphics right-eye)
+            )
+
+          :tower
+          (let [{:keys [^int x ^int y name]} value
+                 shape (Polygon. (int-array [(- x 5) x (+ x 5)]) (int-array [(+ y 30) (+ y 10) (+ y 30)  ]) 3)
+                 ]
+             (.setStroke graphics (BasicStroke. 4))
+             (.setColor graphics Color/BLUE)
+             (.draw graphics shape)
+            )
         
           (do nil)
         )
@@ -171,6 +200,41 @@
      
      ))
 
+  (go
+    (<! (timeout 100))
+
+    (let [rover {:rover {:name "rover"
+                         :shape :rover
+                         :x (+ 100 (rand-int 1200))
+                         :y (+ 100 (rand-int 1400))}}
+          martians (into {}
+                      (comp
+                        (map (fn [i] 
+                          {:name (format "martian %s" i)
+                           :shape :martian
+                           :x (+ 100 (rand-int 1200))
+                           :y (+ 100 (rand-int 1400)) }
+                        ))
+                        (map (fn [value] [(:name value) value]))
+                      )
+                      (range 0 10)
+                    )
+          towers  (into {}
+                      (comp
+                        (map (fn [i] 
+                          {:name (format "tower %s" i)
+                           :shape :tower
+                           :x (+ 100 (rand-int 1200))
+                           :y (+ 100 (rand-int 1400)) }
+                        ))
+                        (map (fn [value] [(:name value) value]))
+                      )
+                      (range 0 10)
+                    )         
+          ]
+      (swap! stateA merge rover martians towers)
+    )
+  )
   nil
   )
 )
