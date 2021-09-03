@@ -254,7 +254,7 @@
       (swap! stateA merge rover martians towers)
 
 
-      (eval* '(dir rover.main))
+      (eval* '(list 'move))
       (eval* '(doc move))
     )
   )
