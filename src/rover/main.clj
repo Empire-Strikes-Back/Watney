@@ -174,21 +174,27 @@
         (condp identical? (:shape value)
           
           :rover
-          (let [{:keys [^int x ^int y name]} value
+          (let [{:keys [^int x ^int y name ^int vision-range ^int move-range]} value
                 body (Polygon. (int-array [x (+ x 15) (+ x 15) x]) (int-array [(+ y 10) (+ y 10) (+ y 45) (+ y 45)]) 4)
                 ]
-             (.setColor graphics Color/WHITE)
-             (.fill graphics body)
-             (.setColor graphics Color/BLACK)
-             #_(.setStroke graphics (BasicStroke. 1))
-             (.drawLine graphics (- x 6) (+ y 14) (- x 6) (+ y 17))
-             (.drawLine graphics (- x 6) (+ y 26) (- x 6) (+ y 29))
-             (.drawLine graphics (- x 6) (+ y 38) (- x 6) (+ y 41))
+            (.setColor graphics Color/WHITE)
+            (.fill graphics body)
+            (.setColor graphics Color/BLACK)
+            #_(.setStroke graphics (BasicStroke. 1))
+            (.drawLine graphics (- x 6) (+ y 14) (- x 6) (+ y 17))
+            (.drawLine graphics (- x 6) (+ y 26) (- x 6) (+ y 29))
+            (.drawLine graphics (- x 6) (+ y 38) (- x 6) (+ y 41))
 
-             (.drawLine graphics (+ x 15 6) (+ y 14) (+ x 15 6) (+ y 17))
-             (.drawLine graphics (+ x 15 6) (+ y 26) (+ x 15 6) (+ y 29))
-             (.drawLine graphics (+ x 15 6) (+ y 38) (+ x 15 6) (+ y 41))
-            )
+            (.drawLine graphics (+ x 15 6) (+ y 14) (+ x 15 6) (+ y 17))
+            (.drawLine graphics (+ x 15 6) (+ y 26) (+ x 15 6) (+ y 29))
+            (.drawLine graphics (+ x 15 6) (+ y 38) (+ x 15 6) (+ y 41))
+          
+            (.setStroke graphics (BasicStroke. 1))
+            (.setColor graphics Color/MAGENTA)
+            (.drawOval graphics (- x vision-range) (- y vision-range) (* vision-range 2) (* vision-range 2))
+            (.setColor graphics Color/BLUE)
+            (.drawOval graphics (- x move-range) (- y move-range) (* move-range 2) (* move-range 2))
+          )
           
           :martian
           (let [{:keys [^int x ^int y name]} value
@@ -225,6 +231,8 @@
     (let [rover {:rover {:name "rover"
                          :shape :rover
                          :x (+ 100 (rand-int 1200))
+                         :vision-range 200
+                         :move-range 100
                          :y (+ 100 (rand-int 1400))}}
           martians (into {}
                       (comp
