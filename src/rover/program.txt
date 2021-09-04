@@ -6,6 +6,7 @@ goal is to visit as many locations - score higher - as possible before rover run
 i have tiles
 i use coordinates, areas and distances
 each step takes energy
+different terrain at a tile or fields affecting tile increase/reduce energy required to move
 i have both green aliens and some basic math like field intersection, distances
 i am simple, i am not overloaded with details
 i generate map of Mars surface
