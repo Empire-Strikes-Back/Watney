@@ -4,3 +4,4 @@ my players program rover on surface of Mars
 my interface is editor on the left and surface of planet on the right
 goal is to visit as many locations as possible before rover run out of energy
 i use coordinates, areas and distances, i have no tiles
+i have both green aliens and some basic math like field intersection, distances
