@@ -6,6 +6,7 @@
     [clojure.string]
     [clojure.java.io :as io]
     [clojure.test.check.generators :as pawny.generators]
+    [clojure.spec.alpha :as s]
     [clojure.repl :refer [source doc dir]]
     )
   (:import
@@ -70,6 +71,8 @@
   (swap! stateA update :rover merge {:x x :y y})
   nil
 )
+
+
 
 
 (defn window
@@ -180,7 +183,7 @@
             (.setColor graphics Color/WHITE)
             (.fill graphics body)
             (.setColor graphics Color/BLACK)
-            #_(.setStroke graphics (BasicStroke. 1))
+            (.setStroke graphics (BasicStroke. 4))
             (.drawLine graphics (- x 6) (+ y 14) (- x 6) (+ y 17))
             (.drawLine graphics (- x 6) (+ y 26) (- x 6) (+ y 29))
             (.drawLine graphics (- x 6) (+ y 38) (- x 6) (+ y 41))
@@ -216,6 +219,18 @@
              (.setStroke graphics (BasicStroke. 4))
              (.setColor graphics Color/DARK_GRAY)
              (.draw graphics shape)
+            )
+          
+          :metallic-insects-cloud
+          (let [{:keys [xs ys name]} value
+                 shape (Polygon. (int-array xs) (int-array ys) (count xs))
+                 ]
+             (.setStroke graphics (BasicStroke. 1))
+             (.setColor graphics Color/LIGHT_GRAY)
+             (.fill graphics shape)
+             (.setColor graphics Color/BLACK)
+             (.draw graphics shape)
+
             )
         
           (do nil)
@@ -257,9 +272,39 @@
                         (map (fn [value] [(:name value) value]))
                       )
                       (range 0 10)
-                    )         
+                    )
+          metallic-insects-clouds (into {}
+                                    (comp
+                                      (map (fn [i] 
+                                        (let [x (+ 100 (rand-int 1200))
+                                              y (+ 100 (rand-int 1400))
+                                              width (+ 30 (rand-int 70)) 
+                                              height (+ 30 (rand-int 70))
+                                              gen-x (pawny.generators/large-integer* {:min x :max (+ x width)})
+                                              gen-y (pawny.generators/large-integer* {:min y :max (+ y height)})
+                                              n-points (+ 3 (rand-int 10))
+                                              xs (->
+                                                  (pawny.generators/vector-distinct gen-x {:num-elements n-points :max-tries 20})
+                                                  (pawny.generators/generate)
+                                                  )
+                                              ys (->
+                                                  (pawny.generators/vector-distinct gen-y {:num-elements n-points :max-tries 20})
+                                                  (pawny.generators/generate)
+                                                  (sort)
+                                                  )
+                                              ]
+                                          { :name (format "metallic-insects-cloud %s" i)
+                                            :shape :metallic-insects-cloud
+                                            :xs xs
+                                            :ys ys}
+                                        )
+                                      ))
+                                      (map (fn [value] [(:name value) value]))
+                                    )
+                                    (range 0 10)
+                                  )         
           ]
-      (swap! stateA merge rover martians towers)
+      (swap! stateA merge rover martians towers metallic-insects-clouds)
 
 
       (eval* '(list 'move))
