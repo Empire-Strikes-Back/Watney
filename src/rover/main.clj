@@ -228,8 +228,6 @@
              (.setStroke graphics (BasicStroke. 1))
              (.setColor graphics Color/LIGHT_GRAY)
              (.fill graphics shape)
-             (.setColor graphics Color/BLACK)
-             (.draw graphics shape)
 
             )
         
