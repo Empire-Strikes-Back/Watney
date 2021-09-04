@@ -8,4 +8,5 @@ i have both green aliens and some basic math like field intersection, distances
 i am simple, i am not overloaded with details
 i generate map of Mars surface
 my map is a tile grid, i generate locations rover can visit
+i have no pathfinding - rover's step is energy spent by going from location to location (geometrical distance)
 i have no randomness after initial generation
