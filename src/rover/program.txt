@@ -3,7 +3,9 @@ i am rover program, i say:
 my players program rover on surface of Mars
 my interface is editor on the left and surface of planet on the right
 goal is to visit as many locations - score higher - as possible before rover run out of energy
-i use coordinates, areas and distances, i have no tiles - rover sees locations in range, one step is not tile but energy
+i have tiles
+i use coordinates, areas and distances
+each step takes energy
 i have both green aliens and some basic math like field intersection, distances
 i am simple, i am not overloaded with details
 i generate map of Mars surface
