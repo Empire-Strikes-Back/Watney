@@ -11,3 +11,4 @@ i have no tiles - i use coordinates, areas and distances - rover's step is energ
 rover requires more/less energy when his path intersects fields or areas (circles, ovals, lines, various plygon shapes)
 i have no animations - i draw map in steps
 i have no buttons - just editor, repl and canvas
+player calls (transmit) from repl to eval editor code
