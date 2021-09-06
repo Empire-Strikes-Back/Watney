@@ -80,6 +80,11 @@
   (mapv - a b)
 )
 
+(defn vec-sum
+  [a b]
+  (mapv + a b)
+)
+
 (defn vec-scalar-divide
   [a x]
   (mapv #(/ % x) a)
@@ -123,9 +128,10 @@
         path-vec-length (vec-length path-vec)
         path-vec-unit (vec-normalize path-vec)
         one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
+        next-point (vec-sum [x y] one-move-vec)
         ]
     (-> @stateA
-      (update :rover merge {:x (int (first one-move-vec)) :y (int (second one-move-vec))})
+      (update :rover merge {:x (int (first next-point)) :y (int (second next-point))})
       (update-in [:rover :energy] (fn [value] (Math/max 0 (- ^int value energy-per-move))))
       (->> (swap! stateA merge))
     )
@@ -274,7 +280,8 @@
             (.drawOval graphics (- x energy) (- y energy) (* energy 2) (* energy 2))
 
             (when (and destination-x destination-y)
-              (.setColor graphics Color/ORANGE)
+              (println :drawing-destination)
+              (.setColor graphics Color/BLUE)
               (.drawLine graphics x y destination-x destination-y)
             )
 
