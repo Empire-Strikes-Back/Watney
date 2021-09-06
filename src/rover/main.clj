@@ -80,9 +80,14 @@
   (mapv - a b)
 )
 
-(defn vec-divide
+(defn vec-scalar-divide
   [a x]
   (mapv #(/ % x) a)
+)
+
+(defn vec-scalar-multiply
+  [a x]
+  (mapv #(* % x) a)
 )
 
 (defn vec-distance
@@ -107,15 +112,19 @@
 
 (defn vec-normalize
   [a]
-  (vec-divide a (vec-length a))
+  (vec-scalar-divide a (vec-length a))
 )
 
 (defn move
   "move rover one step towards destination x y"
   []
   (let [{:keys [energy ^int x ^int y ^int destination-x ^int destination-y]} (:rover @stateA)
+        path-vec (vec-subtract [destination-x destination-y] [x y])
+        path-vec-length (vec-length path-vec)
+        path-vec-unit (vec-normalize path-vec)
+        one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
         ]
-
+    (swap! stateA update :rover merge {:x (int (first one-move-vec)) :y (int (second one-move-vec))})
   )
   nil
 )
