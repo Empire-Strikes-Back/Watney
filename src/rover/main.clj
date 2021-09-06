@@ -14,7 +14,7 @@
     (javax.swing.border EmptyBorder)
     (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension BasicStroke)
     (java.awt.event KeyListener KeyEvent)
-    (java.awt.geom Ellipse2D Ellipse2D$Double)
+    (java.awt.geom Ellipse2D Ellipse2D$Double Point2D.Double)
   )    
 )
 
@@ -26,9 +26,11 @@
 (def ^:dynamic ^Canvas canvas nil)
 (def ^:dynamic ^JTextArea repl nil)
 (def ^:dynamic ^JTextArea output nil)
+(def ^:dynamic ^JEditorPane editor nil)
 (def ^:dynamic ^JScrollPane output-scroll nil)
 (def ^:dynamic ^Graphics2D graphics nil)
 (defonce ns* (find-ns 'rover.main))
+(def ^:const energy-per-move 100)
 
 (defn eval*
   [form]
@@ -65,14 +67,34 @@
   (.setText output "")
 )
 
-(defn move
-  "move rover to x y coordinate"
+(def set-destination
+  "set rover's destination x y"
   [x y]
-  (swap! stateA update :rover merge {:x x :y y})
+  (swap! stateA update :rover merge {:destination-x x 
+                                     :destination-y y})
   nil
 )
 
+(defn move
+  "move rover one step towards destination x y"
+  []
+  (let [{:keys [energy ^int x ^int y ^int destination-x ^int destination-y]} (:rover @stateA)
+        ]
 
+  )
+  nil
+)
+
+(defn can-move?
+  []
+  (>= (get-in @stateA [:rover :energy]) energy-per-move)
+)
+
+(defn transmit
+  "evaluate code in editor and send it to rover"
+  []
+  (-> (.getText editor) (clojure.string/trim) (clojure.string/trim-newline) (read-string) (eval*))
+)
 
 
 (defn window
@@ -163,6 +185,7 @@
   (alter-var-root #'rover.main/output-scroll (constantly output-scroll))
   (alter-var-root #'rover.main/repl (constantly repl))
   (alter-var-root #'rover.main/output (constantly output))
+  (alter-var-root #'rover.main/editor (constantly editor))
   (alter-var-root #'rover.main/graphics (constantly (.getGraphics canvas)))
 
   (add-watch stateA :watch-fn 
@@ -177,7 +200,13 @@
         (condp identical? (:shape value)
           
           :rover
-          (let [{:keys [^int x ^int y name ^int vision-range ^int move-range]} value
+          (let [{:keys [^int x 
+                        ^int y 
+                        name 
+                        ^int energy
+                        ^int destination-x
+                        ^int destination-y
+                        ]} value
                 body (Polygon. (int-array [x (+ x 15) (+ x 15) x]) (int-array [(+ y 10) (+ y 10) (+ y 45) (+ y 45)]) 4)
                 ]
             (.setColor graphics Color/WHITE)
@@ -193,10 +222,14 @@
             (.drawLine graphics (+ x 15 6) (+ y 38) (+ x 15 6) (+ y 41))
           
             (.setStroke graphics (BasicStroke. 1))
-            (.setColor graphics Color/MAGENTA)
-            (.drawOval graphics (- x vision-range) (- y vision-range) (* vision-range 2) (* vision-range 2))
             (.setColor graphics Color/BLUE)
-            (.drawOval graphics (- x move-range) (- y move-range) (* move-range 2) (* move-range 2))
+            (.drawOval graphics (- x energy) (- y energy) (* energy 2) (* energy 2))
+
+            (when (and destination-x destination-y)
+              (.setColor graphics Color/ORANGE)
+              (.drawLine graphics x y destination-x destination-y)
+            )
+
           )
           
           :martian
@@ -244,9 +277,11 @@
     (let [rover {:rover {:name "rover"
                          :shape :rover
                          :x (+ 100 (rand-int 1200))
-                         :vision-range 200
-                         :move-range 100
-                         :y (+ 100 (rand-int 1400))}}
+                         :y (+ 100 (rand-int 1400))
+                         :destination-x nil
+                         :destination-y nil
+                         :energy 500
+                         }}
           martians (into {}
                       (comp
                         (map (fn [i] 
@@ -307,6 +342,8 @@
 
       (eval* '(list 'move))
       (eval* '(doc move))
+
+
     )
   )
   nil
