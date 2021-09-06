@@ -397,9 +397,11 @@
       (eval* '(list 'move))
       (eval* '(doc transmit))
 
-      (.setText editor "
+      (let [{:keys [destination-x destination-y]} (:rover @stateA)]
+        (.setText editor (format 
+"
 (go 
-  (set-destination 1000 1000)
+  (set-destination %s %s)
   (loop []
     (<! (timeout 1000))
     (when (can-move?)
@@ -408,8 +410,10 @@
     )
   )
 )
-                        ")
-
+" destination-x destination-y
+          )
+        )
+      )
     )
   )
   nil
