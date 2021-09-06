@@ -396,7 +396,7 @@
 
 
       (eval* '(list 'move))
-      (eval* '(doc move))
+      (eval* '(doc transmit))
 
       (.setText editor "
 (go 
