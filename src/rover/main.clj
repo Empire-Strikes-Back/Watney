@@ -343,6 +343,18 @@
       (eval* '(list 'move))
       (eval* '(doc move))
 
+      (.setText editor "
+(go 
+  (set-destination 1000 1000)
+  (loop []
+    (<! (timeout 1000))
+    (when (can-move?)
+      (move)
+      (recur)
+    )
+  )
+)
+                        ")
 
     )
   )
