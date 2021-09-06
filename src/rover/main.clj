@@ -124,7 +124,11 @@
         path-vec-unit (vec-normalize path-vec)
         one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
         ]
-    (swap! stateA update :rover merge {:x (int (first one-move-vec)) :y (int (second one-move-vec))})
+    (-> @stateA
+      (update :rover merge {:x (int (first one-move-vec)) :y (int (second one-move-vec))})
+      (update-in [:rover :energy] (fn [value] (Math/max 0 (- ^int value energy-per-move))))
+      (->> (swap! stateA merge))
+    )
   )
   nil
 )
