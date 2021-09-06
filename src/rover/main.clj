@@ -333,8 +333,8 @@
                          :shape :rover
                          :x (+ 100 (rand-int 1200))
                          :y (+ 100 (rand-int 1400))
-                         :destination-x nil
-                         :destination-y nil
+                         :destination-x (+ 100 (rand-int 1200))
+                         :destination-y (+ 100 (rand-int 1400))
                          :energy 500
                          }}
           martians (into {}
