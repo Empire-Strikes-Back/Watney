@@ -77,7 +77,12 @@
 
 (defn vec-subtract
   [a b]
-  (vec (map - a b))
+  (mapv - a b)
+)
+
+(defn vec-divide
+  [a x]
+  (mapv #(/ % x) a)
 )
 
 (defn vec-distance
@@ -98,6 +103,11 @@
       (Math/pow ^int (second a) 2)
     )
   )
+)
+
+(defn vec-normalize
+  [a]
+  (vec-divide a (vec-length a))
 )
 
 (defn move
