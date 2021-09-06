@@ -14,7 +14,7 @@
     (javax.swing.border EmptyBorder)
     (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension BasicStroke)
     (java.awt.event KeyListener KeyEvent)
-    (java.awt.geom Ellipse2D Ellipse2D$Double Point2D.Double)
+    (java.awt.geom Ellipse2D Ellipse2D$Double Point2D$Double)
   )    
 )
 
@@ -67,7 +67,7 @@
   (.setText output "")
 )
 
-(def set-destination
+(defn set-destination
   "set rover's destination x y"
   [x y]
   (swap! stateA update :rover merge {:destination-x x 
@@ -77,10 +77,27 @@
 
 (defn vec-subtract
   [a b]
+  (vec (map - a b))
 )
 
-(def vec-distance
+(defn vec-distance
   [a b]
+  (Math/sqrt 
+    (+ 
+      (Math/pow ^int (- (first a) (first b)) 2)
+      (Math/pow ^int (- (second a) (second b)) 2)
+    )
+  )
+)
+
+(defn vec-length
+  [a]
+  (Math/sqrt 
+    (+
+      (Math/pow ^int (first a) 2)
+      (Math/pow ^int (second a) 2)
+    )
+  )
 )
 
 (defn move
