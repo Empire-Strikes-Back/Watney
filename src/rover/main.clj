@@ -75,6 +75,14 @@
   nil
 )
 
+(defn vec-subtract
+  [a b]
+)
+
+(def vec-distance
+  [a b]
+)
+
 (defn move
   "move rover one step towards destination x y"
   []
