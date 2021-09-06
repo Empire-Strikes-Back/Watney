@@ -280,7 +280,6 @@
             (.drawOval graphics (- x energy) (- y energy) (* energy 2) (* energy 2))
 
             (when (and destination-x destination-y)
-              (println :drawing-destination)
               (.setColor graphics Color/BLUE)
               (.drawLine graphics x y destination-x destination-y)
             )
