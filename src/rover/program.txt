@@ -2,7 +2,7 @@ i am rover program, i say:
 
 my players program rover on surface of Mars
 my interface is editor on the left and surface of planet on the right
-goal is to visit as many locations - score higher - as possible before rover run out of energy
+goal is to reach destination point - location which rover is sent to explore
 i have both green aliens and some basic math like field intersection, distances
 i am simple, i am not overloaded with details
 i generate map of Mars surface
