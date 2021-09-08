@@ -67,11 +67,17 @@
   (.setText output "")
 )
 
-(defn set-destination
-  "set rover's destination x y"
+(defn set-route
+  "set rover's route [[x y] [x y] ..] "
+  [route]
+  (swap! stateA update :rover merge {:route route})
+  nil
+)
+
+(defn add-route-point
+  "add point to rover's route"
   [x y]
-  (swap! stateA update :rover merge {:destination-x x 
-                                     :destination-y y})
+  (swap! stateA update-in [:rover :route] (fn [route] (-> route (conj [x y]) (vec))))
   nil
 )
 
@@ -121,10 +127,12 @@
 )
 
 (defn move
-  "move rover one step towards destination x y"
+  "move rover one step towards next route-point x y"
   []
-  (let [{:keys [energy ^int x ^int y ^int destination-x ^int destination-y]} (:rover @stateA)
-        path-vec (vec-subtract [destination-x destination-y] [x y])
+  (let [{:keys [energy ^int x ^int y route]} (:rover @stateA)
+        route (if (= [x y] (first route)) (rest route) route)
+        [^int route-point-x ^int route-point-y] (first route)
+        path-vec (vec-subtract [route-point-x route-point-y] [x y])
         path-vec-length (vec-length path-vec)
         path-vec-unit (vec-normalize path-vec)
         one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
@@ -258,8 +266,7 @@
                         ^int y 
                         name 
                         ^int energy
-                        ^int destination-x
-                        ^int destination-y
+                        route
                         ]} value
                 body (Polygon. (int-array [x (+ x 15) (+ x 15) x]) (int-array [(+ y 10) (+ y 10) (+ y 45) (+ y 45)]) 4)
                 ]
@@ -279,12 +286,27 @@
             (.setColor graphics Color/BLUE)
             (.drawOval graphics (- x energy) (- y energy) (* energy 2) (* energy 2))
 
-            (when (and destination-x destination-y)
-              (.setColor graphics Color/BLUE)
-              (.drawLine graphics x y destination-x destination-y)
+            (loop [route (cons [x y] route)
+                   [ax ay] (first route)
+                   [bx by] (second route)
+                   ]
+              (when (and ax ay bx by)
+                (.setColor graphics Color/BLUE)
+                (.drawLine graphics ax ay bx by)
+                (recur (rest route) (first (rest route)) (second (rest route)))
+              )
             )
-
           )
+
+          :destination
+          (let [{:keys [^int x ^int y name]} value
+                shape (Polygon. (int-array [x (+ x 30) x]) (int-array [(- y 40) (- y 30) (- y 20)]) 3)
+                 ]
+            (.setStroke graphics (BasicStroke. 2))
+            (.setColor graphics Color/RED)
+            (.draw graphics shape)
+            (.drawLine graphics x (- y 20) x y)
+            )
           
           :martian
           (let [{:keys [^int x ^int y name]} value
@@ -332,9 +354,13 @@
                          :shape :rover
                          :x (+ 100 (rand-int 1200))
                          :y (+ 100 (rand-int 1400))
-                         :destination-x (+ 100 (rand-int 1200))
-                         :destination-y (+ 100 (rand-int 1400))
+                         :route []
                          :energy 500
+                         }}
+          destination { :destination {:name "destination"
+                        :shape :destination
+                         :x (+ 100 (rand-int 1200))
+                         :y (+ 100 (rand-int 1400))
                          }}
           martians (into {}
                       (comp
@@ -391,17 +417,17 @@
                                     (range 0 10)
                                   )         
           ]
-      (swap! stateA merge rover martians towers metallic-insects-clouds)
+      (swap! stateA merge rover destination martians towers metallic-insects-clouds)
 
 
       (eval* '(list 'move))
       (eval* '(doc transmit))
 
-      (let [{:keys [destination-x destination-y]} (:rover @stateA)]
+      (let [{:keys [x y]} (:destination @stateA)]
         (.setText editor (format 
 "
 (go 
-  (set-destination %s %s)
+  (add-route-point %s %s)
   (loop []
     (<! (timeout 1000))
     (when (can-move?)
@@ -410,7 +436,7 @@
     )
   )
 )
-" destination-x destination-y
+" x y
           )
         )
       )
