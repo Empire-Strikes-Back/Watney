@@ -13,7 +13,7 @@
     (javax.swing JFrame WindowConstants ImageIcon JPanel JScrollPane JTextArea BoxLayout JEditorPane ScrollPaneConstants)
     (javax.swing.border EmptyBorder)
     (java.awt Canvas Graphics Graphics2D Shape Color Polygon Dimension BasicStroke)
-    (java.awt.event KeyListener KeyEvent)
+    (java.awt.event KeyListener KeyEvent MouseListener MouseEvent)
     (java.awt.geom Ellipse2D Ellipse2D$Double Point2D$Double)
   )    
 )
@@ -226,6 +226,20 @@
 
   (doto canvas
     (.setSize 1400 1600)
+    (.addMouseListener (reify MouseListener
+                        (mouseClicked
+                          [_ event]
+                          (when (= (.getButton ^MouseEvent event) MouseEvent/BUTTON3)
+                            (swap! stateA merge { :coordinate [(.getX ^MouseEvent event) (.getY ^MouseEvent event)]
+                                                  })
+                          )
+                        )
+                        (mouseEntered [_ event])
+                        (mouseExited [_ event])
+                        (mousePressed [_ event])
+                        (mouseReleased [_ event])
+                        )
+    )
   )
 
   (doto panel
@@ -344,6 +358,17 @@
         )
 
       )
+
+      (let [[^int x ^int y] (:coordinate @stateA) ]
+        (when (and x y)
+          (.setStroke graphics (BasicStroke. 1))
+          (.setColor graphics Color/BLACK)
+          (.drawString graphics (str [x y]) x y)
+          (.fill graphics (Ellipse2D$Double. x y 5 5))
+        )
+      )
+      
+
      
      ))
 
@@ -417,7 +442,15 @@
                                     (range 0 10)
                                   )         
           ]
-      (swap! stateA merge rover destination martians towers metallic-insects-clouds)
+      (swap! stateA merge 
+                    rover 
+                    destination 
+                    martians 
+                    towers 
+                    metallic-insects-clouds
+                    { :coordinate nil
+                    }
+                    )
 
 
       (eval* '(list 'move))
