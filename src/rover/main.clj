@@ -129,18 +129,18 @@
 (defn move
   "move rover one step towards next route-point x y"
   []
-  (let [{:keys [energy ^int x ^int y route]} (:rover @stateA)
+  (let [{:keys [energy ^int x ^int y route ^int energy]} (:rover @stateA)
         [^int route-point-x ^int route-point-y :as route-point] (first route)
-        path-vec (vec-subtract route-point [x y])
-        path-vec-unit (vec-normalize path-vec)
-        one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
-        move-beyond-point? (> (vec-length one-move-vec) (vec-length path-vec))
-        energy-required (if move-beyond-point? (int (vec-length path-vec)) energy-per-move)
-        next-point  (if move-beyond-point? route-point (vec-sum [x y] one-move-vec))
+        route-point-vec (vec-subtract route-point [x y])
+        route-point-vec-unit (vec-normalize route-point-vec)
+        energy-to-route-point (int (vec-length route-point-vec))
+        energy-this-move (min energy energy-per-move energy-to-route-point)
+        move-vec (vec-scalar-multiply route-point-vec-unit energy-this-move)
+        next-point  (if (== energy-this-move energy-to-route-point) route-point (vec-sum [x y] move-vec))
         ]
     (-> @stateA
       (update :rover merge {:x (int (first next-point)) :y (int (second next-point))})
-      (update-in [:rover :energy] (fn [value] (Math/max 0 (- ^int value ^int energy-required))))
+      (update-in [:rover :energy] (fn [value] (max 0 (- value energy-this-move) )))
       (update :rover assoc :route (if (= next-point route-point) (rest route) route))
       (->> (swap! stateA merge))
     )
@@ -152,7 +152,7 @@
   []
   (and 
     (not (empty? (get-in @stateA [:rover :route])))
-    (>= (get-in @stateA [:rover :energy]) energy-per-move)
+    (> (get-in @stateA [:rover :energy]) 0)
   )
 )
 
