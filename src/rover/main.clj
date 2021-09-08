@@ -130,17 +130,18 @@
   "move rover one step towards next route-point x y"
   []
   (let [{:keys [energy ^int x ^int y route]} (:rover @stateA)
-        route (if (= [x y] (first route)) (rest route) route)
-        [^int route-point-x ^int route-point-y] (first route)
-        path-vec (vec-subtract [route-point-x route-point-y] [x y])
-        path-vec-length (vec-length path-vec)
+        [^int route-point-x ^int route-point-y :as route-point] (first route)
+        path-vec (vec-subtract route-point [x y])
         path-vec-unit (vec-normalize path-vec)
         one-move-vec (vec-scalar-multiply path-vec-unit energy-per-move)
-        next-point (vec-sum [x y] one-move-vec)
+        move-beyond-point? (> (vec-length one-move-vec) (vec-length path-vec))
+        energy-required (if move-beyond-point? (int (vec-length path-vec)) energy-per-move)
+        next-point  (if move-beyond-point? route-point (vec-sum [x y] one-move-vec))
         ]
     (-> @stateA
       (update :rover merge {:x (int (first next-point)) :y (int (second next-point))})
-      (update-in [:rover :energy] (fn [value] (Math/max 0 (- ^int value energy-per-move))))
+      (update-in [:rover :energy] (fn [value] (Math/max 0 (- ^int value ^int energy-required))))
+      (update :rover assoc :route (if (= next-point route-point) (rest route) route))
       (->> (swap! stateA merge))
     )
   )
@@ -149,7 +150,10 @@
 
 (defn can-move?
   []
-  (>= (get-in @stateA [:rover :energy]) energy-per-move)
+  (and 
+    (not (empty? (get-in @stateA [:rover :route])))
+    (>= (get-in @stateA [:rover :energy]) energy-per-move)
+  )
 )
 
 (defn transmit
@@ -232,6 +236,9 @@
                           (when (= (.getButton ^MouseEvent event) MouseEvent/BUTTON3)
                             (swap! stateA merge { :coordinate [(.getX ^MouseEvent event) (.getY ^MouseEvent event)]
                                                   })
+                          )
+                          (when (= (.getButton ^MouseEvent event) MouseEvent/BUTTON1)
+                            (swap! stateA update-in [:rover :route] conj [(.getX ^MouseEvent event) (.getY ^MouseEvent event)])
                           )
                         )
                         (mouseEntered [_ event])
