@@ -30,7 +30,11 @@
 (def ^:dynamic ^JScrollPane output-scroll nil)
 (def ^:dynamic ^Graphics2D graphics nil)
 (defonce ns* (find-ns 'rover.main))
+
 (def ^:const energy-per-move 100)
+(def ^:const canvas-width 1600)
+(def ^:const canvas-height 1600)
+(def ^:const tile-size 32)
 
 (defn eval*
   [form]
@@ -189,7 +193,7 @@
   (doto editor-scroll
     (.setViewportView editor)
     (.setHorizontalScrollBarPolicy ScrollPaneConstants/HORIZONTAL_SCROLLBAR_NEVER)
-    (.setPreferredSize (Dimension. 1000 1300))
+    (.setPreferredSize (Dimension. 800 1300))
   )
   
   (doto output
@@ -229,7 +233,7 @@
   )
 
   (doto canvas
-    (.setSize 1400 1600)
+    (.setSize canvas-width canvas-height)
     (.addMouseListener (reify MouseListener
                         (mouseClicked
                           [_ event]
