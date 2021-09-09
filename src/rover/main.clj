@@ -324,12 +324,16 @@
                  face (Polygon. (int-array [x (+ x 30) (+ x 18) (+ x 12)]) (int-array [(+ y 10) (+ y 10) (+ y 40) (+ y 40)]) 4)
                  left-eye (Ellipse2D$Double. (+ x 5) (+ y 15) 8 4)
                  right-eye (Ellipse2D$Double. (+ x 17) (+ y 15) 8 4)
+                 nose (Polygon. (int-array [(+ x 13) (+ x 15) (+ x 17)]) (int-array [(+ y 25) (+ y 20) (+ y 25)]) 3)
+                 mouth (Ellipse2D$Double. (+ x 12) (+ y 30) 8 2)
                  ]
              (.setPaint graphics (Color. 3 165 106))
              (.fill graphics face)
              (.setPaint graphics Color/WHITE)
              (.fill graphics left-eye)
              (.fill graphics right-eye)
+             (.fill graphics nose)
+             (.fill graphics mouth)
             )
 
           :tower
@@ -438,7 +442,7 @@
                     rover 
                     martians 
                     towers 
-                    metallic-insects-clouds
+                    #_metallic-insects-clouds
                     { :coordinate nil
                     }
                     )
