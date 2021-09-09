@@ -319,16 +319,6 @@
             )
           )
 
-          :destination
-          (let [{:keys [^int x ^int y name]} value
-                shape (Polygon. (int-array [x (+ x 30) x]) (int-array [(- y 40) (- y 30) (- y 20)]) 3)
-                 ]
-            (.setStroke graphics (BasicStroke. 2))
-            (.setColor graphics Color/RED)
-            (.draw graphics shape)
-            (.drawLine graphics x (- y 20) x y)
-            )
-          
           :martian
           (let [{:keys [^int x ^int y name]} value
                  face (Polygon. (int-array [x (+ x 30) (+ x 18) (+ x 12)]) (int-array [(+ y 10) (+ y 10) (+ y 40) (+ y 40)]) 4)
@@ -389,11 +379,6 @@
                          :route []
                          :energy 500
                          }}
-          destination { :destination {:name "destination"
-                        :shape :destination
-                         :x (+ 100 (rand-int 1200))
-                         :y (+ 100 (rand-int 1400))
-                         }}
           martians (into {}
                       (comp
                         (map (fn [i] 
@@ -451,7 +436,6 @@
           ]
       (swap! stateA merge 
                     rover 
-                    destination 
                     martians 
                     towers 
                     metallic-insects-clouds
@@ -463,11 +447,10 @@
       (eval* '(list 'move))
       (eval* '(doc transmit))
 
-      (let [{:keys [x y]} (:destination @stateA)]
+      (let []
         (.setText editor (format 
 "
 (go 
-  (add-route-point %s %s)
   (loop []
     (<! (timeout 1000))
     (when (can-move?)
@@ -476,7 +459,7 @@
     )
   )
 )
-" x y
+" 
           )
         )
       )
