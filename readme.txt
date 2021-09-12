@@ -1,1 +1,1 @@
-i am rover program - i am game, my player programs a rover on Mars
+i am Rover program - i am game, my player programs a rover on Mars

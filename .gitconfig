@@ -1,5 +1,5 @@
 [user]
-    name = rover
-    email = rover@program
+    name = Rover
+    email = Rover@program
 
 # git config --local include.path "../.gitconfig"

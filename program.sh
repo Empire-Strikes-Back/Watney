@@ -3,28 +3,28 @@
 repl(){
   clj \
     -J-Dclojure.core.async.pool-size=1 \
-    -X:repl ripley.core/process \
-    :main-ns rover.main
+    -X:repl Ripley.core/process \
+    :main-ns Rover.main
 }
 
 main(){
   clojure \
     -J-Dclojure.core.async.pool-size=1 \
-    -M -m rover.main
+    -M -m Rover.main
 }
 
 uberjar(){
 
   clojure \
-    -X:identicon zazu.core/process \
-    :word '"rover"' \
+    -X:identicon Zazu.core/process \
+    :word '"Rover"' \
     :filename '"out/identicon/icon.png"' \
     :size 256
 
   clojure \
-    -X:uberjar genie.core/process \
-    :main-ns rover.main \
-    :filename '"out/rover.jar"' \
+    -X:uberjar Genie.core/process \
+    :main-ns Rover.main \
+    :filename '"out/Rover.jar"' \
     :paths '["src" "out/identicon"]'
 }
 

@@ -1,11 +1,11 @@
-(ns rover.main
+(ns Rover.main
   (:gen-class)
   (:require 
     [clojure.core.async :as a :refer [<! >! <!! >!! chan put! take! go alt! alts! do-alts close! timeout pipe mult tap untap 
                                       pub sub unsub mix admix unmix dropping-buffer sliding-buffer pipeline pipeline-async to-chan! thread]]
     [clojure.string]
     [clojure.java.io :as io]
-    [clojure.test.check.generators :as pawny.generators]
+    [clojure.test.check.generators :as Pawny.generators]
     [clojure.spec.alpha :as s]
     [clojure.repl :refer [source doc dir]]
     )
@@ -29,7 +29,7 @@
 (def ^:dynamic ^JEditorPane editor nil)
 (def ^:dynamic ^JScrollPane output-scroll nil)
 (def ^:dynamic ^Graphics2D graphics nil)
-(defonce ns* (find-ns 'rover.main))
+(defonce ns* (find-ns 'Rover.main))
 
 (def ^:const energy-per-move 100)
 (def ^:const canvas-width 1600)
@@ -72,16 +72,16 @@
 )
 
 (defn set-route
-  "set rover's route [[x y] [x y] ..] "
+  "set Rover's route [[x y] [x y] ..] "
   [route]
-  (swap! stateA update :rover merge {:route route})
+  (swap! stateA update :Rover merge {:route route})
   nil
 )
 
 (defn add-route-point
-  "add point to rover's route"
+  "add point to Rover's route"
   [x y]
-  (swap! stateA update-in [:rover :route] (fn [route] (-> route (conj [x y]) (vec))))
+  (swap! stateA update-in [:Rover :route] (fn [route] (-> route (conj [x y]) (vec))))
   nil
 )
 
@@ -131,9 +131,9 @@
 )
 
 (defn move
-  "move rover one step towards next route-point x y"
+  "move Rover one step towards next route-point x y"
   []
-  (let [{:keys [energy ^int x ^int y route ^int energy]} (:rover @stateA)
+  (let [{:keys [energy ^int x ^int y route ^int energy]} (:Rover @stateA)
         [^int route-point-x ^int route-point-y :as route-point] (first route)
         route-point-vec (vec-subtract route-point [x y])
         route-point-vec-unit (vec-normalize route-point-vec)
@@ -143,9 +143,9 @@
         next-point  (if (== energy-this-move energy-to-route-point) route-point (vec-sum [x y] move-vec))
         ]
     (-> @stateA
-      (update :rover merge {:x (int (first next-point)) :y (int (second next-point))})
-      (update-in [:rover :energy] (fn [value] (max 0 (- value energy-this-move) )))
-      (update :rover assoc :route (if (= next-point route-point) (rest route) route))
+      (update :Rover merge {:x (int (first next-point)) :y (int (second next-point))})
+      (update-in [:Rover :energy] (fn [value] (max 0 (- value energy-this-move) )))
+      (update :Rover assoc :route (if (= next-point route-point) (rest route) route))
       (->> (swap! stateA merge))
     )
   )
@@ -155,13 +155,13 @@
 (defn can-move?
   []
   (and 
-    (not (empty? (get-in @stateA [:rover :route])))
-    (> (get-in @stateA [:rover :energy]) 0)
+    (not (empty? (get-in @stateA [:Rover :route])))
+    (> (get-in @stateA [:Rover :energy]) 0)
   )
 )
 
 (defn transmit
-  "evaluate code in editor and send it to rover"
+  "evaluate code in editor and send it to Rover"
   []
   (-> (.getText editor) (clojure.string/trim) (clojure.string/trim-newline) (read-string) (eval*))
 )
@@ -169,7 +169,7 @@
 
 (defn window
   []
-  (let [jframe (JFrame. "i am rover program")
+  (let [jframe (JFrame. "i am Rover program")
         panel (JPanel.)
         layout (BoxLayout. panel BoxLayout/X_AXIS)
         code-panel (JPanel.)
@@ -242,7 +242,7 @@
                                                   })
                           )
                           (when (= (.getButton ^MouseEvent event) MouseEvent/BUTTON1)
-                            (swap! stateA update-in [:rover :route] conj [(.getX ^MouseEvent event) (.getY ^MouseEvent event)])
+                            (swap! stateA update-in [:Rover :route] conj [(.getX ^MouseEvent event) (.getY ^MouseEvent event)])
                           )
                         )
                         (mouseEntered [_ event])
@@ -267,13 +267,13 @@
     (.setVisible true)
   )
 
-  (alter-var-root #'rover.main/jframe (constantly jframe))
-  (alter-var-root #'rover.main/canvas (constantly canvas))
-  (alter-var-root #'rover.main/output-scroll (constantly output-scroll))
-  (alter-var-root #'rover.main/repl (constantly repl))
-  (alter-var-root #'rover.main/output (constantly output))
-  (alter-var-root #'rover.main/editor (constantly editor))
-  (alter-var-root #'rover.main/graphics (constantly (.getGraphics canvas)))
+  (alter-var-root #'Rover.main/jframe (constantly jframe))
+  (alter-var-root #'Rover.main/canvas (constantly canvas))
+  (alter-var-root #'Rover.main/output-scroll (constantly output-scroll))
+  (alter-var-root #'Rover.main/repl (constantly repl))
+  (alter-var-root #'Rover.main/output (constantly output))
+  (alter-var-root #'Rover.main/editor (constantly editor))
+  (alter-var-root #'Rover.main/graphics (constantly (.getGraphics canvas)))
 
   (add-watch stateA :watch-fn 
     (fn [ref wathc-key old-state new-state]
@@ -286,7 +286,7 @@
 
         (condp identical? (:shape value)
           
-          :rover
+          :Rover
           (let [{:keys [^int x 
                         ^int y 
                         name 
@@ -380,8 +380,8 @@
   (go
     (<! (timeout 100))
 
-    (let [rover {:rover {:name "rover"
-                         :shape :rover
+    (let [Rover {:Rover {:name "Rover"
+                         :shape :Rover
                          :x (+ 100 (rand-int 1200))
                          :y (+ 100 (rand-int 1400))
                          :route []
@@ -418,16 +418,16 @@
                                               y (+ 100 (rand-int 1400))
                                               width (+ 30 (rand-int 70)) 
                                               height (+ 30 (rand-int 70))
-                                              gen-x (pawny.generators/large-integer* {:min x :max (+ x width)})
-                                              gen-y (pawny.generators/large-integer* {:min y :max (+ y height)})
+                                              gen-x (Pawny.generators/large-integer* {:min x :max (+ x width)})
+                                              gen-y (Pawny.generators/large-integer* {:min y :max (+ y height)})
                                               n-points (+ 3 (rand-int 10))
                                               xs (->
-                                                  (pawny.generators/vector-distinct gen-x {:num-elements n-points :max-tries 20})
-                                                  (pawny.generators/generate)
+                                                  (Pawny.generators/vector-distinct gen-x {:num-elements n-points :max-tries 20})
+                                                  (Pawny.generators/generate)
                                                   )
                                               ys (->
-                                                  (pawny.generators/vector-distinct gen-y {:num-elements n-points :max-tries 20})
-                                                  (pawny.generators/generate)
+                                                  (Pawny.generators/vector-distinct gen-y {:num-elements n-points :max-tries 20})
+                                                  (Pawny.generators/generate)
                                                   (sort)
                                                   )
                                               ]
@@ -443,7 +443,7 @@
                                   )         
           ]
       (swap! stateA merge 
-                    rover 
+                    Rover 
                     martians 
                     towers 
                     #_metallic-insects-clouds
@@ -480,7 +480,7 @@
 (defn reload
   []
   (require 
-    '[rover.main]
+    '[Rover.main]
     :reload)
 )
 
