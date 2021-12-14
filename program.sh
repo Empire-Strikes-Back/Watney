@@ -21,10 +21,11 @@ uberjar(){
     :filename '"out/identicon/icon.png"' \
     :size 256
 
+  rm -rf out/*.jar
   clojure \
     -X:uberjar Genie.core/process \
     :main-ns Watney.main \
-    :filename '"out/Watney.jar"' \
+    :filename "\"out/Watney-$(git rev-parse --short HEAD).jar\"" \
     :paths '["src" "out/identicon"]'
 }
 
