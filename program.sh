@@ -2,54 +2,34 @@
 
 repl(){
   clj \
-    -X:repl deps-repl.core/process \
-    :main-ns rovers.main \
-    :port 7788 \
-    :host '"0.0.0.0"' \
-    :repl? true \
-    :nrepl? false
+    -J-Dclojure.core.async.pool-size=1 \
+    -X:repl Ripley.core/process \
+    :main-ns Watney.main
 }
 
 main(){
   clojure \
     -J-Dclojure.core.async.pool-size=1 \
-    -J-Dclojure.compiler.direct-linking=false \
-    -M -m rovers.main
+    -M -m Watney.main
 }
 
 uberjar(){
-  clj \
-    -X:uberjar genie.core/process \
-    :uberjar-name out/rovers.standalone.jar \
-    :main-ns rovers.main
-  mkdir -p out/jpackage-input
-  mv out/rovers.standalone.jar out/jpackage-input/
+
+  clojure \
+    -X:identicon Zazu.core/process \
+    :word '"Watney"' \
+    :filename '"out/identicon/icon.png"' \
+    :size 256
+
+  clojure \
+    -X:uberjar Genie.core/process \
+    :main-ns Watney.main \
+    :filename '"out/Watney.jar"' \
+    :paths '["src" "out/identicon"]'
 }
 
-j-package(){
-  OS=${1:?"Need OS type (windows/linux/mac)"}
-
-  echo "Starting compilation..."
-
-  if [ "$OS" == "windows" ]; then
-    J_ARG="--win-menu --win-dir-chooser --win-shortcut"
-          
-  elif [ "$OS" == "linux" ]; then
-      J_ARG="--linux-shortcut"
-  else
-      J_ARG=""
-  fi
-
-  jpackage \
-    --input out/jpackage-input \
-    --dest out \
-    --main-jar rovers.standalone.jar \
-    --name "rovers" \
-    --main-class clojure.main \
-    --arguments -m \
-    --arguments rovers.main \
-    --app-version "1" \
-    $J_ARG
+release(){
+  uberjar
 }
 
 "$@"

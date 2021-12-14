@@ -1,5 +1,3 @@
-i am rovers program - game where players program rovers on Mars
+luckily, i'm a botanist
 
-my language is clojure
-my runtime is jvm
-i have no logo - my name, a word - rovers - defines me 
+i am game, my player programs a rover on Mars

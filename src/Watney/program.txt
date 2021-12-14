@@ -1,0 +1,14 @@
+i am Rover program, i say:
+
+my players program rover on surface of Mars
+my interface is editor on the left and surface of planet on the right
+goal is to visit as many locations - score higher - as possible before rover run out of energy
+i have both green aliens and some basic math like field intersection, distances
+i am simple, i am not overloaded with details
+i generate map of Mars surface
+i have no randomness after initial generation
+i use tile grid coordinates, areas and distances - rover's step is energy spent by going from point to point
+rover requires more/less energy when his path intersects fields or areas (circles, ovals, lines, various plygon shapes)
+i have no animations - i draw map in steps
+i have no buttons - just editor, repl and canvas
+player calls (transmit) from repl to eval editor code
